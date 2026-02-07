@@ -1,55 +1,139 @@
+{% comment %}
+  Gift Guide Banner Section
+{% endcomment %}
+
+<div class="gg-banner">
+  <div class="gg-banner__container">
+    <div class="gg-banner__content">
+      {% if section.settings.title != blank %}
+        <h1 class="gg-banner__title">{{ section.settings.title }}</h1>
+      {% endif %}
+      
+      {% if section.settings.subtitle != blank %}
+        <p class="gg-banner__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="gg-banner__btn">
+          {{ section.settings.btn_text }}
+          <span class="gg-arrow">&rarr;</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .gg-banner {
+    position: relative;
+    width: 100%;
+    min-height: 500px;
+    background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  
+  /* Overlay for readability */
+  .gg-banner::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.85); /* Adjust opacity based on design */
+    z-index: 1;
+  }
+
+  .gg-banner__container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .gg-banner__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+    line-height: 1.2;
+  }
+
+  .gg-banner__subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  .gg-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    background: #000;
+    color: #fff;
+    padding: 15px 40px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: background 0.3s ease;
+  }
+
+  .gg-banner__btn:hover {
+    background: #333;
+  }
+
+  .gg-arrow {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .gg-banner__btn:hover .gg-arrow {
+    transform: translateX(5px);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .gg-banner { min-height: 400px; }
+    .gg-banner__title { font-size: 2rem; }
+    .gg-banner__subtitle { font-size: 1rem; }
+  }
+</style>
+
 {% schema %}
 {
   "name": "Gift Banner",
   "settings": [
     {
       "type": "image_picker",
-      "id": "background_image",
+      "id": "bg_image",
       "label": "Background Image"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "text",
-      "name": "Title",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Find the Perfect Gift"
-        }
-      ]
     },
     {
       "type": "text",
-      "name": "Subtitle",
-      "settings": [
-        {
-          "type": "text",
-          "id": "subtitle",
-          "label": "Subtitle",
-          "default": "Shop our curated collection of amazing gifts"
-        }
-      ]
+      "id": "title",
+      "label": "Title",
+      "default": "The Gift Guide"
     },
     {
-      "type": "button",
-      "name": "Button",
-      "settings": [
-        {
-          "type": "text",
-          "id": "button_text",
-          "label": "Button Text",
-          "default": "Shop Now"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Button URL",
-          "default": "/collections/all"
-        }
-      ]
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
     }
   ],
   "presets": [
@@ -59,54 +143,3 @@
   ]
 }
 {% endschema %}
-
-<div class="gift-banner" style="background-image: url('{{ section.settings.background_image | img_url: 'master' }}');">
-  {% for block in section.blocks %}
-    {% if block.type == 'text' %}
-      {% if block.settings.title %}
-        <h1 class="banner-title">{{ block.settings.title }}</h1>
-      {% else %}
-        <p class="banner-subtitle">{{ block.settings.subtitle }}</p>
-      {% endif %}
-    {% elsif block.type == 'button' %}
-      <a class="banner-btn" href="{{ block.settings.button_link }}">{{ block.settings.button_text }}</a>
-    {% endif %}
-  {% endfor %}
-</div>
-
-<style>
-.gift-banner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 20px;
-  background-size: cover;
-  background-position: center;
-  color: white;
-}
-.banner-title {
-  font-size: 48px;
-  margin-bottom: 10px;
-}
-.banner-subtitle {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-.banner-btn {
-  padding: 12px 30px;
-  background-color: #ff0000;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: transform 0.3s ease;
-}
-.banner-btn:hover {
-  transform: scale(1.05);
-}
-@media(max-width:768px){
-  .banner-title { font-size: 32px; }
-  .banner-subtitle { font-size: 16px; }
-}
-</style>
