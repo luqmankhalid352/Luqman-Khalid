@@ -1,154 +1,235 @@
+{% comment %}
+  Gift Guide Grid Section with Popup
+{% endcomment %}
+
+{{ 'gift-guide.css' | asset_url | stylesheet_tag }}
+
+<div class="gg-grid-section">
+  {% if section.settings.title != blank %}
+    <h2 class="gg-section-title">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  <div class="gg-grid">
+    {% for block in section.blocks %}
+      {% assign product = all_products[block.settings.product_select] %}
+      
+      {% if product != blank %}
+        <div class="gg-card" data-product-handle="{{ product.handle }}">
+          <div class="gg-card__image-wrapper">
+            <img 
+              src="{{ product.featured_image | image_url: width: 600 }}" 
+              alt="{{ product.title }}" 
+              loading="lazy" 
+              class="gg-card__image"
+            >
+            <button class="gg-card__trigger" type="button" aria-label="Quick View">
+              <span>+</span>
+            </button>
+          </div>
+          
+          {% comment %}
+            Embed Product JSON data for the JS to read without API calls
+          {% endcomment %}
+          <script type="application/json" class="gg-product-json">
+            {{ product | json }}
+          </script>
+        </div>
+      {% else %}
+        <div class="gg-card placeholder">
+          <div class="gg-card__image-wrapper" style="background: #eee; display:flex; align-items:center; justify-content:center;">
+            <span>Select Product in Editor</span>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% comment %}
+  POPUP MODAL STRUCTURE
+{% endcomment %}
+<div id="gg-modal" class="gg-modal" aria-hidden="true">
+  <div class="gg-modal__overlay"></div>
+  <div class="gg-modal__content">
+    <button class="gg-modal__close" aria-label="Close">&times;</button>
+    
+    <div class="gg-modal__body">
+      <!-- Dynamic Image -->
+      <div class="gg-modal__media">
+        <img id="modal-img" src="" alt="">
+      </div>
+      
+      <!-- Dynamic Details -->
+      <div class="gg-modal__details">
+        <h3 id="modal-title" class="gg-modal__title"></h3>
+        <p id="modal-price" class="gg-modal__price"></p>
+        <div id="modal-description" class="gg-modal__desc"></div>
+        
+        <!-- Variant Selectors Form -->
+        <form id="gg-atc-form">
+          <div id="modal-variants" class="gg-modal__variants"></div>
+          
+          <input type="hidden" name="id" id="modal-variant-id">
+          
+          <button type="submit" id="gg-atc-btn" class="gg-btn-atc">
+            Add to Cart <span class="gg-arrow">&rarr;</span>
+          </button>
+          <div id="gg-error-msg" style="color:red; display:none; margin-top:10px;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %}
+  Pass Settings to JS (Bonus Product ID)
+{% endcomment %}
+<script>
+  window.giftGuideSettings = {
+    bonusProductVariantId: {{ section.settings.bonus_product_variant_id | default: 0 }}
+  };
+</script>
+
+<script src="{{ 'gift-guide.js' | asset_url }}" defer="defer"></script>
+
+<style>
+  .gg-grid-section { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+  .gg-section-title { text-align: center; font-size: 2rem; margin-bottom: 40px; font-family: serif; }
+  
+  .gg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .gg-card { position: relative; cursor: pointer; }
+  .gg-card__image-wrapper { position: relative; overflow: hidden; aspect-ratio: 1 / 1.2; }
+  .gg-card__image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .gg-card:hover .gg-card__image { transform: scale(1.05); }
+
+  /* Plus Button */
+  .gg-card__trigger {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+  }
+  .gg-card__trigger:hover { transform: scale(1.1); }
+
+  /* Modal Styles */
+  .gg-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1000; display: none;
+  }
+  .gg-modal.is-open { display: flex; align-items: center; justify-content: center; }
+  
+  .gg-modal__overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+  }
+  
+  .gg-modal__content {
+    background: #fff;
+    position: relative;
+    width: 90%; max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 2;
+  }
+  
+  .gg-modal__close {
+    position: absolute; top: 10px; right: 15px;
+    background: none; border: none; font-size: 2rem; cursor: pointer;
+  }
+
+  .gg-modal__body { display: flex; gap: 30px; margin-top: 20px; }
+  .gg-modal__media, .gg-modal__details { flex: 1; }
+  .gg-modal__media img { width: 100%; height: auto; object-fit: contain; }
+  
+  .gg-modal__title { font-size: 1.5rem; margin-bottom: 10px; }
+  .gg-modal__price { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; }
+  .gg-modal__desc { font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+
+  /* Selectors */
+  .gg-variant-group { margin-bottom: 15px; }
+  .gg-variant-group label { display: block; font-weight: 600; margin-bottom: 5px; }
+  .gg-variant-group select { width: 100%; padding: 10px; border: 1px solid #ccc; }
+
+  .gg-btn-atc {
+    width: 100%;
+    background: #000; color: #fff;
+    padding: 15px;
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 20px;
+  }
+  .gg-btn-atc:disabled { background: #ccc; cursor: not-allowed; }
+
+  @media (max-width: 768px) {
+    .gg-grid { grid-template-columns: 1fr; }
+    .gg-modal__body { flex-direction: column; }
+  }
+</style>
+
 {% schema %}
 {
   "name": "Gift Grid",
   "settings": [
     {
-      "type": "number",
-      "id": "columns",
-      "label": "Columns",
-      "default": 3
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Tisso vison in the wild"
     },
     {
-      "type": "range",
-      "id": "gap",
-      "label": "Gap between items",
-      "min": 10,
-      "max": 50,
-      "default": 30
+      "type": "header",
+      "content": "Bonus Item Rule"
+    },
+    {
+      "type": "paragraph",
+      "content": "If a user adds a product with variants 'Black' and 'Medium', the product defined by the Variant ID below will also be added."
+    },
+    {
+      "type": "text",
+      "id": "bonus_product_variant_id",
+      "label": "Soft Winter Jacket Variant ID",
+      "info": "Paste the Variant ID of the Soft Winter Jacket here."
     }
   ],
   "blocks": [
-    {% for i in (1..6) %}
     {
       "type": "product",
-      "name": "Product {{ i }}",
+      "name": "Product Block",
+      "limit": 6,
       "settings": [
         {
           "type": "product",
-          "id": "product_{{ i }}",
+          "id": "product_select",
           "label": "Select Product"
         }
       ]
-    }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
+    }
   ],
   "presets": [
-    { "name": "Gift Grid" }
+    {
+      "name": "Gift Grid"
+    }
   ]
 }
 {% endschema %}
-
-<div class="gift-grid" style="--grid-gap: {{ section.settings.gap }}px; --columns: {{ section.settings.columns }};">
-  {% for block in section.blocks %}
-    {% if block.type == 'product' and block.settings[block.id] %}
-      {% assign prod = all_products[block.settings[block.id]] %}
-      <div class="grid-item" data-product-handle="{{ prod.handle }}">
-        <img src="{{ prod.featured_image | img_url: '400x' }}" alt="{{ prod.title }}">
-        <h3>{{ prod.title }}</h3>
-        <p>{{ prod.price | money }}</p>
-        <button class="popup-btn">View</button>
-      </div>
-    {% endif %}
-  {% endfor %}
-</div>
-
-<!-- Popup -->
-<div id="product-popup" style="display:none;">
-  <div class="popup-content">
-    <span class="close-popup">&times;</span>
-    <div class="popup-inner">
-      <img id="popup-image" src="" alt="">
-      <h3 id="popup-title"></h3>
-      <p id="popup-price"></p>
-      <p id="popup-desc"></p>
-      <select id="popup-variants"></select>
-      <button id="add-to-cart">Add to Cart</button>
-    </div>
-  </div>
-</div>
-
-<style>
-.gift-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--columns), 1fr);
-  gap: var(--grid-gap);
-}
-.grid-item {
-  border: 1px solid #eee;
-  padding: 20px;
-  text-align: center;
-}
-.grid-item img { width: 100%; height: auto; cursor: pointer; }
-.popup-content {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center;
-}
-.popup-inner {
-  background:#fff; padding:20px; position:relative; max-width:500px; width:90%;
-}
-.close-popup { position:absolute; top:10px; right:10px; cursor:pointer; font-size:24px; }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const popup = document.getElementById('product-popup');
-  const popupImage = document.getElementById('popup-image');
-  const popupTitle = document.getElementById('popup-title');
-  const popupPrice = document.getElementById('popup-price');
-  const popupDesc = document.getElementById('popup-desc');
-  const popupVariants = document.getElementById('popup-variants');
-  let selectedProduct = null;
-
-  document.querySelectorAll('.popup-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const handle = this.closest('.grid-item').dataset.productHandle;
-      fetch(`/products/${handle}.js`)
-        .then(res => res.json())
-        .then(data => {
-          selectedProduct = data;
-          popupImage.src = data.images[0];
-          popupTitle.textContent = data.title;
-          popupPrice.textContent = Shopify.formatMoney(data.price);
-          popupDesc.textContent = data.description;
-          popupVariants.innerHTML = '';
-          data.variants.forEach(v => {
-            const opt = document.createElement('option');
-            opt.value = v.id;
-            opt.textContent = v.title;
-            popupVariants.appendChild(opt);
-          });
-          popup.style.display = 'flex';
-        });
-    });
-  });
-
-  document.querySelector('.close-popup').addEventListener('click', () => {
-    popup.style.display = 'none';
-  });
-
-  document.getElementById('add-to-cart').addEventListener('click', () => {
-    const variantId = popupVariants.value;
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1 })
-    }).then(() => {
-      // Special rule: Soft Winter Jacket
-      const variant = selectedProduct.variants.find(v => v.id == variantId);
-      if (variant.option1 == 'Black' && variant.option2 == 'Medium') {
-        fetch('/products/soft-winter-jacket.js')
-          .then(res => res.json())
-          .then(data => {
-            fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: data.variants[0].id, quantity: 1 })
-            });
-          });
-      }
-      popup.style.display = 'none';
-      alert('Added to cart!');
-    });
-  });
-});
-</script>
