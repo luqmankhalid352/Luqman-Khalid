@@ -12,6 +12,7 @@
     "banner": {
       "type": "gift-banner",
       "settings": {
+        "bg_image": "shopify://shop_images/image-Photoroom_1.png",
         "title": "The Gift Guide",
         "subtitle": "Discover Joy: Your Ultimate Holiday Gift Destination.",
         "btn_text": "Shop Now",
