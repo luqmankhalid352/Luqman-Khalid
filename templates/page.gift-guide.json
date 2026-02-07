@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "gift_banner": {
+      "type": "gift-banner"
+    },
+    "gift_grid": {
+      "type": "gift-product-grid"
+    }
+  },
+  "order": [
+    "gift_banner",
+    "gift_grid"
+  ]
+}
