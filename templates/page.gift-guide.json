@@ -1,70 +1,49 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "gift_banner": {
+    "banner": {
       "type": "gift-banner",
-      "blocks": {
-        "title": {
-          "type": "text",
-          "name": "Banner Title",
-          "settings": {
-            "text": "Find the Perfect Gift",
-            "width": "100%",
-            "alignment": "center",
-            "font_size": "48px",
-            "line_height": "1.2",
-            "color": "#ffffff",
-            "background": false,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
-        },
-        "subtitle": {
-          "type": "text",
-          "name": "Banner Subtitle",
-          "settings": {
-            "text": "Shop our curated collection of amazing gifts",
-            "width": "80%",
-            "alignment": "center",
-            "font_size": "18px",
-            "line_height": "1.4",
-            "color": "#ffffff",
-            "background": false,
-            "padding-block-start": 10,
-            "padding-block-end": 20,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
-        },
-        "button": {
-          "type": "button",
-          "name": "Banner Button",
-          "settings": {
-            "text": "Shop Now",
-            "url": "/collections/all",
-            "style": "primary",
-            "alignment": "center"
-          }
-        }
-      },
-      "block_order": ["title", "subtitle", "button"],
       "settings": {
-        "background_image": "",
-        "content_direction": "column",
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "title": "The Gift Guide",
+        "subtitle": "Discover Joy: Your Ultimate Holiday Gift Destination.",
+        "btn_text": "Shop Now"
       }
     },
-    "gift_grid": {
+    "grid": {
       "type": "gift-grid",
       "blocks": {
-        "product_1": { "type": "product", "settings": { "product": "" } },
-        "product_2": { "type": "product", "settings": { "product": "" } },
-        "product_3": { "type": "product", "settings": { "product": "" } },
-        "product_4": { "type": "product", "settings": { "product": "" } },
-        "product_5": { "type": "product", "settings": { "product": "" } },
-        "product_6": { "type": "product", "settings": { "product": "" } }
+        "product_1": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_5": {
+          "type": "product",
+          "settings": {}
+        },
+        "product_6": {
+          "type": "product",
+          "settings": {}
+        }
       },
       "block_order": [
         "product_1",
@@ -75,12 +54,12 @@
         "product_6"
       ],
       "settings": {
-        "columns": 3,
-        "gap": 30,
-        "padding-block-start": 50,
-        "padding-block-end": 50
+        "title": "Tisso vison in the wild"
       }
     }
   },
-  "order": ["gift_banner", "gift_grid"]
+  "order": [
+    "banner",
+    "grid"
+  ]
 }
