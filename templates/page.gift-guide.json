@@ -1,14 +1,12 @@
 {
   "sections": {
-    "gift_banner": {
+    "gift-banner": {
       "type": "gift-banner"
     },
-    "gift_grid": {
-      "type": "gift-product-grid"
+    "gift-grid": {
+      "type": "gift-grid"
     }
   },
-  "order": [
-    "gift_banner",
-    "gift_grid"
-  ]
+  "type": "page",
+  "name": "Gift Guide Page"
 }
