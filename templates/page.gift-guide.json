@@ -14,7 +14,8 @@
       "settings": {
         "title": "The Gift Guide",
         "subtitle": "Discover Joy: Your Ultimate Holiday Gift Destination.",
-        "btn_text": "Shop Now"
+        "btn_text": "Shop Now",
+        "btn_link": ""
       }
     },
     "grid": {
@@ -22,27 +23,39 @@
       "blocks": {
         "product_1": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "black-leather-bag"
+          }
         },
         "product_2": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "blue-silk-tuxedo"
+          }
         },
         "product_3": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "chequered-red-shirt"
+          }
         },
         "product_4": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "classic-leather-jacket"
+          }
         },
         "product_5": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "classic-varsity-top"
+          }
         },
         "product_6": {
           "type": "product",
-          "settings": {}
+          "settings": {
+            "product_select": "dark-denim-top"
+          }
         }
       },
       "block_order": [
@@ -54,7 +67,8 @@
         "product_6"
       ],
       "settings": {
-        "title": "Tisso vison in the wild"
+        "title": "Tisso vison in the wild",
+        "bonus_product_variant_id": "44039893319731"
       }
     }
   },
