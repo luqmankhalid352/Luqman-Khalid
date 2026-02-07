@@ -1,0 +1,123 @@
+{
+  "sections": {
+    "gift_banner": {
+      "type": "gift-banner",
+      "blocks": {
+        "title": {
+          "type": "text",
+          "name": "Banner Title",
+          "settings": {
+            "text": "Find the Perfect Gift",
+            "width": "100%",
+            "alignment": "center",
+            "font_size": "48px",
+            "line_height": "1.2",
+            "color": "#ffffff",
+            "background": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
+        "subtitle": {
+          "type": "text",
+          "name": "Banner Subtitle",
+          "settings": {
+            "text": "Shop our curated collection of amazing gifts",
+            "width": "80%",
+            "alignment": "center",
+            "font_size": "18px",
+            "line_height": "1.4",
+            "color": "#ffffff",
+            "background": false,
+            "padding-block-start": 10,
+            "padding-block-end": 20,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
+        "button": {
+          "type": "button",
+          "name": "Banner Button",
+          "settings": {
+            "text": "Shop Now",
+            "url": "/collections/all",
+            "style": "primary",
+            "alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "subtitle",
+        "button"
+      ],
+      "settings": {
+        "background_image": "",
+        "content_direction": "column",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "gift_grid": {
+      "type": "gift-grid",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_5": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_6": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4",
+        "product_5",
+        "product_6"
+      ],
+      "settings": {
+        "columns": 3,
+        "gap": 30,
+        "padding-block-start": 50,
+        "padding-block-end": 50
+      }
+    }
+  },
+  "order": [
+    "gift_banner",
+    "gift_grid"
+  ]
+}

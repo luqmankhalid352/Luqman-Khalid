@@ -1,0 +1,154 @@
+{% schema %}
+{
+  "name": "Gift Grid",
+  "settings": [
+    {
+      "type": "number",
+      "id": "columns",
+      "label": "Columns",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 10,
+      "max": 50,
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {% for i in (1..6) %}
+    {
+      "type": "product",
+      "name": "Product {{ i }}",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_{{ i }}",
+          "label": "Select Product"
+        }
+      ]
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  "presets": [
+    { "name": "Gift Grid" }
+  ]
+}
+{% endschema %}
+
+<div class="gift-grid" style="--grid-gap: {{ section.settings.gap }}px; --columns: {{ section.settings.columns }};">
+  {% for block in section.blocks %}
+    {% if block.type == 'product' and block.settings[block.id] %}
+      {% assign prod = all_products[block.settings[block.id]] %}
+      <div class="grid-item" data-product-handle="{{ prod.handle }}">
+        <img src="{{ prod.featured_image | img_url: '400x' }}" alt="{{ prod.title }}">
+        <h3>{{ prod.title }}</h3>
+        <p>{{ prod.price | money }}</p>
+        <button class="popup-btn">View</button>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<!-- Popup -->
+<div id="product-popup" style="display:none;">
+  <div class="popup-content">
+    <span class="close-popup">&times;</span>
+    <div class="popup-inner">
+      <img id="popup-image" src="" alt="">
+      <h3 id="popup-title"></h3>
+      <p id="popup-price"></p>
+      <p id="popup-desc"></p>
+      <select id="popup-variants"></select>
+      <button id="add-to-cart">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: var(--grid-gap);
+}
+.grid-item {
+  border: 1px solid #eee;
+  padding: 20px;
+  text-align: center;
+}
+.grid-item img { width: 100%; height: auto; cursor: pointer; }
+.popup-content {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center;
+}
+.popup-inner {
+  background:#fff; padding:20px; position:relative; max-width:500px; width:90%;
+}
+.close-popup { position:absolute; top:10px; right:10px; cursor:pointer; font-size:24px; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const popup = document.getElementById('product-popup');
+  const popupImage = document.getElementById('popup-image');
+  const popupTitle = document.getElementById('popup-title');
+  const popupPrice = document.getElementById('popup-price');
+  const popupDesc = document.getElementById('popup-desc');
+  const popupVariants = document.getElementById('popup-variants');
+  let selectedProduct = null;
+
+  document.querySelectorAll('.popup-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const handle = this.closest('.grid-item').dataset.productHandle;
+      fetch(`/products/${handle}.js`)
+        .then(res => res.json())
+        .then(data => {
+          selectedProduct = data;
+          popupImage.src = data.images[0];
+          popupTitle.textContent = data.title;
+          popupPrice.textContent = Shopify.formatMoney(data.price);
+          popupDesc.textContent = data.description;
+          popupVariants.innerHTML = '';
+          data.variants.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v.id;
+            opt.textContent = v.title;
+            popupVariants.appendChild(opt);
+          });
+          popup.style.display = 'flex';
+        });
+    });
+  });
+
+  document.querySelector('.close-popup').addEventListener('click', () => {
+    popup.style.display = 'none';
+  });
+
+  document.getElementById('add-to-cart').addEventListener('click', () => {
+    const variantId = popupVariants.value;
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    }).then(() => {
+      // Special rule: Soft Winter Jacket
+      const variant = selectedProduct.variants.find(v => v.id == variantId);
+      if (variant.option1 == 'Black' && variant.option2 == 'Medium') {
+        fetch('/products/soft-winter-jacket.js')
+          .then(res => res.json())
+          .then(data => {
+            fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: data.variants[0].id, quantity: 1 })
+            });
+          });
+      }
+      popup.style.display = 'none';
+      alert('Added to cart!');
+    });
+  });
+});
+</script>

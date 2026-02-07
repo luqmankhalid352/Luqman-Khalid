@@ -1,0 +1,112 @@
+{% schema %}
+{
+  "name": "Gift Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Title",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Find the Perfect Gift"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Subtitle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Shop our curated collection of amazing gifts"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button URL",
+          "default": "/collections/all"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Banner"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="gift-banner" style="background-image: url('{{ section.settings.background_image | img_url: 'master' }}');">
+  {% for block in section.blocks %}
+    {% if block.type == 'text' %}
+      {% if block.settings.title %}
+        <h1 class="banner-title">{{ block.settings.title }}</h1>
+      {% else %}
+        <p class="banner-subtitle">{{ block.settings.subtitle }}</p>
+      {% endif %}
+    {% elsif block.type == 'button' %}
+      <a class="banner-btn" href="{{ block.settings.button_link }}">{{ block.settings.button_text }}</a>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<style>
+.gift-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+.banner-title {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+.banner-subtitle {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.banner-btn {
+  padding: 12px 30px;
+  background-color: #ff0000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+.banner-btn:hover {
+  transform: scale(1.05);
+}
+@media(max-width:768px){
+  .banner-title { font-size: 32px; }
+  .banner-subtitle { font-size: 16px; }
+}
+</style>
